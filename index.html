@@ -2,24 +2,49 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>SpeechSynthesis 테스트</title>
+  <title>SpeechSynthesis 필터 + 멈춤 기능</title>
 </head>
 <body>
-  <h2>SpeechSynthesis 간단 테스트</h2>
+  <h2>SpeechSynthesis 필터 + 멈춤 버튼</h2>
   <textarea id="text" rows="4" cols="40" placeholder="여기에 말할 텍스트를 입력하세요"></textarea><br />
   <button id="speakBtn">말하기</button>
+  <button id="stopBtn">멈춤</button>
 
   <script>
     const speakBtn = document.getElementById('speakBtn');
+    const stopBtn = document.getElementById('stopBtn');
+
+    function cleanText(text) {
+      // 1) 괄호 안 내용 제거: ( ... )
+      // 2) *, #, - 문자 제거
+      return text
+        .replace(/\([^)]*\)/g, '')  // 괄호 안 내용 제거
+        .replace(/[*#-]/g, '')      // *, #, - 제거
+        .trim();
+    }
+
     speakBtn.onclick = () => {
-      const text = document.getElementById('text').value.trim();
+      let text = document.getElementById('text').value.trim();
       if (!text) {
         alert('텍스트를 입력하세요!');
         return;
       }
+      // 텍스트 필터링
+      text = cleanText(text);
+      if (!text) {
+        alert('읽을 내용이 없습니다.');
+        return;
+      }
+
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ko-KR'; // 한국어 설정
+      utterance.lang = 'ko-KR';
+
+      window.speechSynthesis.cancel();  // 기존 재생 중지
       window.speechSynthesis.speak(utterance);
+    };
+
+    stopBtn.onclick = () => {
+      window.speechSynthesis.cancel();
     };
   </script>
 </body>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>SpeechSynthesis 테스트</title>
+</head>
+<body>
+  <h2>SpeechSynthesis 간단 테스트</h2>
+  <textarea id="text" rows="4" cols="40" placeholder="여기에 말할 텍스트를 입력하세요"></textarea><br />
+  <button id="speakBtn">말하기</button>
+
+  <script>
+    const speakBtn = document.getElementById('speakBtn');
+    speakBtn.onclick = () => {
+      const text = document.getElementById('text').value.trim();
+      if (!text) {
+        alert('텍스트를 입력하세요!');
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ko-KR'; // 한국어 설정
+      window.speechSynthesis.speak(utterance);
+    };
+  </script>
+</body>
+</html>
